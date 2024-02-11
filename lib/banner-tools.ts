@@ -1,0 +1,39 @@
+interface BannerToolProps {
+    path:string;
+    alt:string;
+}
+
+export const bannerTools:BannerToolProps[] = [
+    {
+        path:'/banner/1.jpg',
+        alt:'1'
+    },
+    {
+        path:'/banner/2.jpg',
+        alt:'2'
+    },
+    {
+        path:'/banner/3.jpg',
+        alt:'3'
+    },
+    {
+        path:'/banner/4.jpg',
+        alt:'4'
+    },
+    {
+        path:'/banner/5.jpg',
+        alt:'5'
+    },
+    {
+        path:'/banner/6.jpg',
+        alt:'6'
+    },
+    {
+        path:'/banner/7.jpg',
+        alt:'7'
+    },
+    {
+        path:'/banner/8.jpg',
+        alt:'8'
+    }
+]

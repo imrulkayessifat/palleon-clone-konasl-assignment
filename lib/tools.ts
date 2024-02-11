@@ -24,6 +24,6 @@ export const tools: ToolsProps[] = [
     },
     {
         component: MdWallpaper,
-        type: 'design'
+        type: 'banner'
     }
 ]
