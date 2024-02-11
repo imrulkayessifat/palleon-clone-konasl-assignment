@@ -20,6 +20,8 @@ const Editor = () => {
     const [rotate, setRotate] = useState(0)
     const [left, setLeft] = useState(0)
     const [top, setTop] = useState(0)
+    const [width, setWidth] = useState(0)
+    const [height, setHeight] = useState(0)
     const [current_component, setCurrentComponent] = useState<ComponentProps>({
         name: "main_frame",
         type: "rect",
@@ -126,19 +128,52 @@ const Editor = () => {
     }
 
     const resizeElement = (id: string, currentInfo: ComponentProps) => {
-        console.log(id, currentInfo)
+        setCurrentComponent(currentInfo)
+
+        let isMoving = true
+
+        const currentDiv = document.getElementById(id)
+
+        const mouseMove = (event: MouseEvent) => {
+            if (!currentDiv) return;
+
+            const { movementX, movementY } = event;
+            const getStyle = window.getComputedStyle(currentDiv)
+            const width = parseInt(getStyle.width)
+            const height = parseInt(getStyle.height)
+            if (isMoving) {
+                currentDiv.style.width = `${width + movementX}px`
+                currentDiv.style.height = `${height + movementY}px`
+            }
+        }
+
+        const mouseUp = (event: MouseEvent) => {
+            isMoving = false
+            window.removeEventListener('mousemove', mouseMove)
+            window.removeEventListener('mouseup', mouseUp)
+            if (!currentDiv) return;
+            setWidth(parseInt(currentDiv.style.width))
+            setHeight(parseInt(currentDiv.style.height))
+        }
+
+        window.addEventListener('mousemove', mouseMove)
+        window.addEventListener('mouseup', mouseUp)
     }
 
     const rotateElement = (id: string, currentInfo: ComponentProps) => {
         console.log(id, currentInfo)
     }
 
-
     useEffect(() => {
         if (current_component) {
 
             const index = components.findIndex(c => c.id === current_component.id)
             const temp = components.filter(c => c.id !== current_component.id)
+
+            if (current_component.name !== 'text') {
+                components[index].width = width || current_component.width
+                components[index].height = height || current_component.height
+            }
 
             if (current_component.name === 'main_frame' && image) {
                 components[index].image = image || current_component.image
@@ -152,8 +187,14 @@ const Editor = () => {
             }
 
             setComponents([...temp, components[index]])
+
+            setColor('')
+            setWidth(0)
+            setHeight(0)
+            setTop(0)
+            setLeft(0)
         }
-    }, [color, image,left,top])
+    }, [color, image, left, top, width, height,])
 
     return (
         <div className='mt-24'>

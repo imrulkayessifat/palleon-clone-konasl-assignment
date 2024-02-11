@@ -6,7 +6,7 @@ import { useToolStore } from "@/hooks/tools";
 const Tools = () => {
     const { setElements } = useToolStore();
     const [selectedTool, setSelectedTool] = useState<string | null>(null);
-    console.log(selectedTool)
+   
     return (
         <div className='flex flex-col gap-6 w-[80px] h-full overflow-y-auto'>
             {
