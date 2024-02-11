@@ -18,6 +18,8 @@ const Editor = () => {
     const { image, setImage } = useBannerImageStore();
 
     const [rotate, setRotate] = useState(0)
+    const [left, setLeft] = useState(0)
+    const [top, setTop] = useState(0)
     const [current_component, setCurrentComponent] = useState<ComponentProps>({
         name: "main_frame",
         type: "rect",
@@ -90,16 +92,45 @@ const Editor = () => {
         setComponents([...components, style])
     }
 
-    const moveElement = () => {
+    const moveElement = (id: string, currentInfo: ComponentProps) => {
+        setCurrentComponent(currentInfo)
 
+        let isMoving = true
+
+        const currentDiv = document.getElementById(id)
+
+        const mouseMove = (event: MouseEvent) => {
+            if (!currentDiv) return;
+
+            const { movementX, movementY } = event;
+            const getStyle = window.getComputedStyle(currentDiv)
+            const left = parseInt(getStyle.left)
+            const top = parseInt(getStyle.top)
+            if (isMoving) {
+                currentDiv.style.left = `${left + movementX}px`
+                currentDiv.style.top = `${top + movementY}px`
+            }
+        }
+
+        const mouseUp = (event: MouseEvent) => {
+            isMoving = false
+            window.removeEventListener('mousemove', mouseMove)
+            window.removeEventListener('mouseup', mouseUp)
+            if (!currentDiv) return;
+            setLeft(parseInt(currentDiv.style.left))
+            setTop(parseInt(currentDiv.style.top))
+        }
+
+        window.addEventListener('mousemove', mouseMove)
+        window.addEventListener('mouseup', mouseUp)
     }
 
-    const resizeElement = () => {
-
+    const resizeElement = (id: string, currentInfo: ComponentProps) => {
+        console.log(id, currentInfo)
     }
 
-    const rotateElement = () => {
-
+    const rotateElement = (id: string, currentInfo: ComponentProps) => {
+        console.log(id, currentInfo)
     }
 
 

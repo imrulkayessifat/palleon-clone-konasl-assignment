@@ -21,9 +21,9 @@ interface ToolViewProps {
     components:ComponentProps[],
     setComponents: (components: ComponentProps[]) => void;
     rotate: number;
-    moveElement: () => void
-    resizeElement: () => void
-    rotateElement: () => void
+    moveElement: (id:string, currentInfo:ComponentProps) => void
+    resizeElement: (id:string, currentInfo:ComponentProps) => void
+    rotateElement: (id:string, currentInfo:ComponentProps) => void
 }
 
 const ToolView = ({

@@ -7,9 +7,9 @@ interface ShapesProps {
   setComponents: (components: ComponentProps[]) => void;
   data: string;
   rotate: number;
-  moveElement: () => void
-  resizeElement: () => void
-  rotateElement: () => void
+  moveElement: (id:string, currentInfo:ComponentProps) => void
+  resizeElement: (id:string, currentInfo:ComponentProps) => void
+  rotateElement: (id:string, currentInfo:ComponentProps) => void
 }
 
 const Shapes: React.FC<ShapesProps> = ({
