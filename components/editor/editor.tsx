@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 
 import { Button } from '@/components/ui/button';
 import Tools from '@/components/editor/tools'
@@ -14,13 +14,14 @@ import { useBannerImageStore } from '@/hooks/banner';
 
 const Editor = () => {
     const { state, name } = useToolStore()
-    const { color } = useColorStore();
+    const { color, setColor } = useColorStore();
     const { image, setImage } = useBannerImageStore();
 
+    const [rotate, setRotate] = useState(0)
     const [current_component, setCurrentComponent] = useState<ComponentProps>({
         name: "main_frame",
         type: "rect",
-        id: Math.floor((Math.random() * 100) + 1),
+        id: 1,
         height: 450,
         width: 650,
         z_index: 1,
@@ -33,7 +34,7 @@ const Editor = () => {
         {
             name: "main_frame",
             type: "rect",
-            id: Math.floor((Math.random() * 100) + 1),
+            id: 1,
             height: 450,
             width: 650,
             z_index: 1,
@@ -44,31 +45,99 @@ const Editor = () => {
     ])
 
     const removeComponent = (id: number) => {
-        console.log(id);
+        const temp = components.filter(c => c.id !== id)
+        setCurrentComponent({
+            name: "main_frame",
+            type: "rect",
+            id: 1,
+            height: 450,
+            width: 650,
+            z_index: 1,
+            color: '#ffbe6f',
+            image: "",
+            setCurrentComponent: (a: ComponentProps) => setCurrentComponent(a)
+        })
+        setComponents(temp)
     }
 
     const removeBackground = () => {
         setImage('')
         setComponents(prevComponents => prevComponents.map(component => ({
             ...component,
-            image: image
+            image: ''
         })));
     }
 
+    const createShape = (name: string, type: string) => {
+        const style = {
+            id: Date.now(),
+            name: name,
+            type,
+            left: 10,
+            top: 10,
+            opacity: 1,
+            width: 200,
+            height: 150,
+            rotate,
+            z_index: 2,
+            image: '',
+            color: '#3c3c3d',
+            setCurrentComponent: (a: SetStateAction<ComponentProps>) => setCurrentComponent(a),
+            moveElement,
+            resizeElement,
+            rotateElement
+        }
+        setComponents([...components, style])
+    }
+
+    const moveElement = () => {
+
+    }
+
+    const resizeElement = () => {
+
+    }
+
+    const rotateElement = () => {
+
+    }
+
+
     useEffect(() => {
-        setComponents(prevComponents => prevComponents.map(component => ({
-            ...component,
-            color: color,
-            image: image
-        })));
-    }, [color, image]);
+        if (current_component) {
+
+            const index = components.findIndex(c => c.id === current_component.id)
+            const temp = components.filter(c => c.id !== current_component.id)
+
+            if (current_component.name === 'main_frame' && image) {
+                components[index].image = image || current_component.image
+            }
+
+            components[index].color = color || current_component.color
+
+            setComponents([...temp, components[index]])
+
+            setColor('')
+        }
+    }, [color, image])
 
     return (
         <div className='mt-24'>
             <div className='flex mx-auto px-8'>
                 <Tools />
                 {
-                    state && name && <ToolView data={name} />
+                    state && name && (
+                        <ToolView
+                            setCurrentComponent={setCurrentComponent}
+                            components={components}
+                            setComponents={setComponents}
+                            rotate={rotate}
+                            moveElement={moveElement}
+                            resizeElement={resizeElement}
+                            rotateElement={rotateElement}
+                            data={name}
+                        />
+                    )
                 }
                 <div className='flex items-center justify-center w-full h-full'>
                     <div className='m-w-[650px] m-h-[480px] flex justify-center items-center overflow-hidden'>

@@ -6,6 +6,10 @@ export interface ComponentProps {
     width: number;
     z_index: number;
     color: string;
-    image: string;
+    image?: string;
+    opacity?: number;
+    left?: number;
+    top?: number;
+    rotate?: number;
     setCurrentComponent: (a: any) => void;
 };
