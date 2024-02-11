@@ -146,11 +146,14 @@ const Editor = () => {
 
             components[index].color = color || current_component.color
 
-            setComponents([...temp, components[index]])
+            if (current_component.name !== 'main_frame') {
+                components[index].left = left || current_component.left
+                components[index].top = top || current_component.top
+            }
 
-            setColor('')
+            setComponents([...temp, components[index]])
         }
-    }, [color, image])
+    }, [color, image,left,top])
 
     return (
         <div className='mt-24'>
