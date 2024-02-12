@@ -1,5 +1,4 @@
 import { ComponentProps } from "@/types/type";
-import { SetStateAction } from "react";
 
 interface ShapesProps {
   setCurrentComponent: (component: ComponentProps) => void;

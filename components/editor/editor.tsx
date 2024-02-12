@@ -9,12 +9,15 @@ import EditorSidebar from '@/components/editor/editor-sidebar';
 import ToolView from '@/components/editor/tool-view';
 import { ComponentProps } from '@/types/type';
 import { useColorStore } from '@/hooks/color';
+import { useOpacityStore } from '@/hooks/opacity';
 import { useToolStore } from '@/hooks/tools';
 import { useBannerImageStore } from '@/hooks/banner';
+
 
 const Editor = () => {
     const { state, name } = useToolStore()
     const { color, setColor } = useColorStore();
+    const { opacity,setOpacity } = useOpacityStore();
     const { image, setImage } = useBannerImageStore();
 
     const [rotate, setRotate] = useState(0)
@@ -22,7 +25,12 @@ const Editor = () => {
     const [top, setTop] = useState(0)
     const [width, setWidth] = useState(0)
     const [height, setHeight] = useState(0)
-    const [current_component, setCurrentComponent] = useState<ComponentProps>({
+
+    const [padding, setPadding] = useState(0)
+    const [font, setFont] = useState(0)
+    const [weight, setWeight] = useState(0)
+
+    const main_obj = {
         name: "main_frame",
         type: "rect",
         id: 1,
@@ -32,20 +40,12 @@ const Editor = () => {
         color: '#ffbe6f',
         image: "",
         setCurrentComponent: (a: ComponentProps) => setCurrentComponent(a)
-    })
+    }
+
+    const [current_component, setCurrentComponent] = useState<ComponentProps>(main_obj)
 
     const [components, setComponents] = useState<ComponentProps[]>([
-        {
-            name: "main_frame",
-            type: "rect",
-            id: 1,
-            height: 450,
-            width: 650,
-            z_index: 1,
-            color: '#ffbe6f',
-            image: "",
-            setCurrentComponent: (a: ComponentProps) => setCurrentComponent(a)
-        }
+        main_obj
     ])
 
     const removeComponent = (id: number) => {
@@ -79,7 +79,7 @@ const Editor = () => {
             type,
             left: 10,
             top: 10,
-            opacity: 1,
+            opacity: '1',
             width: 200,
             height: 150,
             rotate,
@@ -161,18 +161,60 @@ const Editor = () => {
     }
 
     const rotateElement = (id: string, currentInfo: ComponentProps) => {
-        console.log(id, currentInfo)
+        setCurrentComponent(main_obj)
+        setCurrentComponent(currentInfo)
+
+        const target = document.getElementById(id)
+
+        const mouseMove = (event: MouseEvent) => {
+            if (!target) return;
+
+            const { movementX, movementY } = event;
+            const getStyle = window.getComputedStyle(target)
+
+            const trans = getStyle.transform
+
+            const values = trans.split('(')[1].split(')')[0].split(',')
+
+            const angle = Math.round(Math.atan2(parseInt(values[1]), parseInt(values[0])) * (180 / Math.PI))
+
+            let deg = angle < 0 ? angle + 360 : angle
+
+            if (movementX) {
+                deg = deg + movementX
+            }
+            target.style.transform = `rotate(${deg}deg)`
+
+        }
+        const mouseUp = () => {
+            window.removeEventListener('mousemove', mouseMove)
+            window.removeEventListener('mouseup', mouseUp)
+
+            if (!target) return;
+
+            const getStyle = window.getComputedStyle(target)
+            const trans = getStyle.transform
+            const values = trans.split('(')[1].split(')')[0].split(',')
+            const angle = Math.round(Math.atan2(parseInt(values[1]), parseInt(values[0])) * (180 / Math.PI))
+            let deg = angle < 0 ? angle + 360 : angle
+            setRotate(deg)
+
+        }
+
+        window.addEventListener('mousemove', mouseMove)
+        window.addEventListener('mouseup', mouseUp)
     }
 
     useEffect(() => {
         if (current_component) {
-
+            console.log(opacity)
             const index = components.findIndex(c => c.id === current_component.id)
             const temp = components.filter(c => c.id !== current_component.id)
 
             if (current_component.name !== 'text') {
                 components[index].width = width || current_component.width
                 components[index].height = height || current_component.height
+                components[index].rotate = rotate || current_component.rotate
             }
 
             if (current_component.name === 'main_frame' && image) {
@@ -184,6 +226,7 @@ const Editor = () => {
             if (current_component.name !== 'main_frame') {
                 components[index].left = left || current_component.left
                 components[index].top = top || current_component.top
+                components[index].opacity = opacity || current_component.opacity
             }
 
             setComponents([...temp, components[index]])
@@ -193,8 +236,10 @@ const Editor = () => {
             setHeight(0)
             setTop(0)
             setLeft(0)
+            setRotate(0)
+            setOpacity('')
         }
-    }, [color, image, left, top, width, height,])
+    }, [color, image, left, top, width, height,opacity])
 
     return (
         <div className='mt-24'>
@@ -210,6 +255,8 @@ const Editor = () => {
                             moveElement={moveElement}
                             resizeElement={resizeElement}
                             rotateElement={rotateElement}
+                            setFont={setFont}
+                            setWeight={setWeight}
                             data={name}
                         />
                     )
@@ -231,7 +278,7 @@ const Editor = () => {
                     </div>
                 </div>
                 <div className='h-full w-[250px] justify-start items-start'>
-                    <EditorSidebar />
+                    <EditorSidebar current_component={current_component} />
                     {
                         image.length > 0 && (
                             <Button className='mt-5 px-10' onClick={removeBackground} variant={"outline"}>

@@ -18,12 +18,14 @@ const views: { [key: string]: React.ElementType } = {
 interface ToolViewProps {
     data: string,
     setCurrentComponent: (component: ComponentProps) => void;
-    components:ComponentProps[],
+    components: ComponentProps[],
     setComponents: (components: ComponentProps[]) => void;
     rotate: number;
-    moveElement: (id:string, currentInfo:ComponentProps) => void
-    resizeElement: (id:string, currentInfo:ComponentProps) => void
-    rotateElement: (id:string, currentInfo:ComponentProps) => void
+    moveElement: (id: string, currentInfo: ComponentProps) => void
+    resizeElement: (id: string, currentInfo: ComponentProps) => void
+    rotateElement: (id: string, currentInfo: ComponentProps) => void
+    setFont: (data: number) => void
+    setWeight: (data: number) => void
 }
 
 const ToolView = ({
@@ -34,7 +36,9 @@ const ToolView = ({
     rotate,
     moveElement,
     resizeElement,
-    rotateElement
+    rotateElement,
+    setFont,
+    setWeight
 }: ToolViewProps) => {
     const { state, setElements } = useToolStore()
     const CurrentView = views[data];
@@ -52,6 +56,8 @@ const ToolView = ({
                 moveElement={moveElement}
                 resizeElement={resizeElement}
                 rotateElement={rotateElement}
+                setFont={setFont}
+                setWeight={setWeight}
             />
         </div>
     )

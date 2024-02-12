@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { MdDelete } from "react-icons/md";
 
 import Element from '@/components/editor/element';
 import { Button } from '@/components/ui/button';
+import { Textarea } from "@/components/ui/textarea"
 import { ComponentProps } from '@/types/type';
 
 interface EditEditorProps {
@@ -94,7 +96,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
                         variant={"outline"}
                         className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
                     >
-                        <MdDelete  className='w-5 h-5' />
+                        <MdDelete className='w-5 h-5' />
                     </Button>
                 )
             }
@@ -127,12 +129,50 @@ const EditEditor: React.FC<EditEditorProps> = ({
                         variant={"outline"}
                         className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
                     >
-                        <MdDelete  className='w-5 h-5' />
+                        <MdDelete className='w-5 h-5' />
                     </Button>
                 )
             }
         </div>
     }
+
+    if (info.name === 'text') {
+        html = <div id={randValue} onClick={() => info.setCurrentComponent(info)} style={{
+            left: info.left + 'px',
+            top: info.top + 'px',
+            zIndex: info.z_index,
+            transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)',
+            padding: info.padding + 'px',
+            color: info.color,
+            opacity: info.opacity,
+        }}
+            className='absolute group hover:border-[2px] hover:border-indigo-500'
+        >
+            <Element id={randValue} info={info} exId="" />
+
+            <h2
+                style={{ fontSize: info.font + 'px', fontWeight: info.weight }}
+                className='w-full h-full'
+            >
+                {info.title}
+            </h2>
+
+            {
+                current_component.id === info.id && (
+                    <Button
+                        onClick={() => removeComponent(info.id)}
+                        variant={"outline"}
+                        className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
+                    >
+                        <MdDelete className='w-5 h-5' />
+                    </Button>
+                )
+            }
+        </div>
+    }
+
+
+
     return html;
 }
 
