@@ -1,11 +1,9 @@
-import { number } from "zod";
-
 export interface ComponentProps {
     name                : string;
     type                : string;
     id                  : number;
-    height?              : number;
-    width?               : number;
+    height?             : number;
+    width?              : number;
     z_index             : number;
     color               : string;
     image?              : string;

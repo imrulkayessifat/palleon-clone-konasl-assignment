@@ -1,6 +1,6 @@
 "use client";
 
-import { SetStateAction, useState } from "react";
+import { useState,useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -21,7 +21,7 @@ import { ComponentProps } from "@/types/type";
 
 const SidebarSchema = z.object({
     color: z.string(),
-    opacity: z.number()
+    opacity: z.string()
 })
 
 interface EditorSidebarProps {
@@ -31,6 +31,9 @@ interface EditorSidebarProps {
 const EditorSidebar: React.FC<EditorSidebarProps> = ({
     current_component
 }) => {
+
+    const opacityValue = current_component.opacity !== undefined ? current_component.opacity : '1';
+
     const { setColor } = useColorStore();
     const { setOpacity } = useOpacityStore();
     const [sliderValue, setSliderValue] = useState(1);
@@ -38,14 +41,18 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
         resolver: zodResolver(SidebarSchema),
         defaultValues: {
             color: '#ffbe6f',
-            opacity: 1
+            opacity: current_component.opacity,
         }
     });
 
     const onSubmit = async (data: z.infer<typeof SidebarSchema>) => {
         console.log(data)
     }
-    
+
+    useEffect(()=>{
+        setSliderValue(parseFloat(opacityValue))
+    },[current_component.opacity])
+
     return (
         <div className="flex flex-col gap-3 ">
             <Form {...form}>
@@ -94,7 +101,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                                                 min={0}
                                                 max={1}
                                                 step={0.1}
-                                                defaultValue={[sliderValue]}
+                                                // defaultValue={[Math.floor(current_component.opacity)]}
+                                                value={[parseFloat(opacityValue)]}
                                             />
                                         </FormControl>
                                         <FormMessage />
