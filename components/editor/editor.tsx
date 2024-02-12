@@ -187,7 +187,6 @@ const Editor = () => {
 
     useEffect(() => {
         if (current_component) {
-            console.log(opacity)
             const index = components.findIndex(c => c.id === current_component.id)
             const temp = components.filter(c => c.id !== current_component.id)
 
@@ -195,6 +194,12 @@ const Editor = () => {
                 components[index].width = width || current_component.width
                 components[index].height = height || current_component.height
                 components[index].rotate = rotate || current_component.rotate
+            }
+
+            if (current_component.name === 'text') {
+                components[index].font = font || current_component.font
+                components[index].padding = padding || current_component.padding
+                components[index].weight = weight || current_component.weight
             }
 
             if (current_component.name === 'main_frame' && image) {
@@ -221,7 +226,7 @@ const Editor = () => {
             setOpacity('')
             setZIndex('')
         }
-    }, [color, image, left, top, width, height, opacity,zindex])
+    }, [color, image, left, top, width, height, opacity, zindex,padding,font,weight])
 
     return (
         <div className='mt-24'>
@@ -260,7 +265,12 @@ const Editor = () => {
                     </div>
                 </div>
                 <div className='h-full w-[250px] justify-start items-start'>
-                    <EditorSidebar current_component={current_component} />
+                    <EditorSidebar
+                        current_component={current_component}
+                        setPadding={setPadding}
+                        setFont={setFont}
+                        setWeight={setWeight}
+                    />
                     {
                         image.length > 0 && (
                             <Button className='mt-5 px-10' onClick={removeBackground} variant={"outline"}>

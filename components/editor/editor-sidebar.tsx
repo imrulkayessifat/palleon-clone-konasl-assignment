@@ -23,17 +23,24 @@ import { ComponentProps } from "@/types/type";
 const SidebarSchema = z.object({
     color: z.string(),
     opacity: z.string(),
-    z_index: z.string({
-        required_error: "Value Must not less than 1!",
-    })
+    z_index: z.string(),
+    padding: z.number(),
+    font: z.number(),
+    weight: z.number()
 })
 
 interface EditorSidebarProps {
-    current_component: ComponentProps
+    current_component: ComponentProps;
+    setPadding: (data: number) => void;
+    setFont: (data: number) => void;
+    setWeight: (data: number) => void;
 }
 
 const EditorSidebar: React.FC<EditorSidebarProps> = ({
-    current_component
+    current_component,
+    setPadding,
+    setFont,
+    setWeight
 }) => {
 
     const opacityValue = current_component.opacity !== undefined ? current_component.opacity : '1';
@@ -47,7 +54,10 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
         defaultValues: {
             color: '#ffbe6f',
             opacity: current_component.opacity,
-            z_index: current_component.z_index.toString()
+            z_index: current_component.z_index.toString(),
+            padding: current_component.padding,
+            font: current_component.font,
+            weight: current_component.weight,
         }
     });
 
@@ -131,6 +141,75 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                                                     onChange={(e) => {
                                                         field.onChange(e.target.value);
                                                         setZIndex(e.target.value)
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </>
+                        )
+                    }
+                    {
+                        current_component.name === 'text' && (
+                            <>
+                                <FormField
+                                    control={form.control}
+                                    name="padding"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Padding</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    defaultValue={current_component.padding}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setPadding(parseInt(e.target.value))
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="font"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Font</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    defaultValue={current_component.font}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setFont(parseInt(e.target.value))
+                                                    }}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="weight"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Weight</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    type="number"
+                                                    defaultValue={current_component.weight}
+                                                    min={100}
+                                                    step={100}
+                                                    max={900}
+                                                    onChange={(e) => {
+                                                        field.onChange(e.target.value);
+                                                        setWeight(parseInt(e.target.value))
                                                     }}
                                                 />
                                             </FormControl>
