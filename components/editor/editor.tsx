@@ -11,14 +11,16 @@ import { ComponentProps } from '@/types/type';
 import { useColorStore } from '@/hooks/color';
 import { useOpacityStore } from '@/hooks/opacity';
 import { useToolStore } from '@/hooks/tools';
+import { useZIndexStore } from '@/hooks/z-index';
 import { useBannerImageStore } from '@/hooks/banner';
 
 
 const Editor = () => {
     const { state, name } = useToolStore()
     const { color, setColor } = useColorStore();
-    const { opacity,setOpacity } = useOpacityStore();
+    const { opacity, setOpacity } = useOpacityStore();
     const { image, setImage } = useBannerImageStore();
+    const { zindex, setZIndex } = useZIndexStore()
 
     const [rotate, setRotate] = useState(0)
     const [left, setLeft] = useState(0)
@@ -70,28 +72,6 @@ const Editor = () => {
             ...component,
             image: ''
         })));
-    }
-
-    const createShape = (name: string, type: string) => {
-        const style = {
-            id: Date.now(),
-            name: name,
-            type,
-            left: 10,
-            top: 10,
-            opacity: '1',
-            width: 200,
-            height: 150,
-            rotate,
-            z_index: 2,
-            image: '',
-            color: '#3c3c3d',
-            setCurrentComponent: (a: SetStateAction<ComponentProps>) => setCurrentComponent(a),
-            moveElement,
-            resizeElement,
-            rotateElement
-        }
-        setComponents([...components, style])
     }
 
     const moveElement = (id: string, currentInfo: ComponentProps) => {
@@ -227,6 +207,7 @@ const Editor = () => {
                 components[index].left = left || current_component.left
                 components[index].top = top || current_component.top
                 components[index].opacity = opacity || current_component.opacity
+                components[index].z_index = parseInt(zindex) || current_component.z_index
             }
 
             setComponents([...temp, components[index]])
@@ -238,8 +219,9 @@ const Editor = () => {
             setLeft(0)
             setRotate(0)
             setOpacity('')
+            setZIndex('')
         }
-    }, [color, image, left, top, width, height,opacity])
+    }, [color, image, left, top, width, height, opacity,zindex])
 
     return (
         <div className='mt-24'>
