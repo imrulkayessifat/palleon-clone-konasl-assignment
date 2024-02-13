@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
 import Tools from '@/components/editor/tools'
@@ -13,14 +13,15 @@ import { useOpacityStore } from '@/hooks/opacity';
 import { useToolStore } from '@/hooks/tools';
 import { useZIndexStore } from '@/hooks/z-index';
 import { useBannerImageStore } from '@/hooks/banner';
-
+import { useRadiusStore } from '@/hooks/radius';
 
 const Editor = () => {
     const { state, name } = useToolStore()
     const { color, setColor } = useColorStore();
     const { opacity, setOpacity } = useOpacityStore();
     const { image, setImage } = useBannerImageStore();
-    const { zindex, setZIndex } = useZIndexStore()
+    const { zindex, setZIndex } = useZIndexStore();
+    const { radius } = useRadiusStore();
 
     const [rotate, setRotate] = useState(0)
     const [left, setLeft] = useState(0)
@@ -202,6 +203,10 @@ const Editor = () => {
                 components[index].weight = weight || current_component.weight
             }
 
+            if (current_component.name === 'image') {
+                components[index].radius = radius || current_component.radius
+            }
+
             if (current_component.name === 'main_frame' && image) {
                 components[index].image = image || current_component.image
             }
@@ -226,7 +231,7 @@ const Editor = () => {
             setOpacity('')
             setZIndex('')
         }
-    }, [color, image, left, top, width, height, opacity, zindex,padding,font,weight])
+    }, [color, image, left, top, width, height, opacity, zindex, padding, font, weight, radius])
 
     return (
         <div className='mt-24'>

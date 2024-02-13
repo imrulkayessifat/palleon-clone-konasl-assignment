@@ -28,7 +28,7 @@ const Shapes: React.FC<ShapesProps> = ({
       type,
       left: 10,
       top: 10,
-      opacity: 1,
+      opacity: '1',
       width: 200,
       height: 150,
       rotate,

@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { ComponentProps } from "@/types/type";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -35,8 +35,28 @@ const FormSchema = z.object({
     ),
 });
 
-const Upload = () => {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // Change to an array
+interface UploadProps {
+  setCurrentComponent: (component: ComponentProps) => void;
+  components: ComponentProps[],
+  setComponents: (components: ComponentProps[]) => void;
+  data: string;
+  rotate: number;
+  moveElement: (id: string, currentInfo: ComponentProps) => void
+  resizeElement: (id: string, currentInfo: ComponentProps) => void
+  rotateElement: (id: string, currentInfo: ComponentProps) => void
+}
+
+const Upload: React.FC<UploadProps> = ({
+  setCurrentComponent,
+  components,
+  setComponents,
+  data,
+  rotate,
+  moveElement,
+  resizeElement,
+  rotateElement
+}) => {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [imageSrcs, setImageSrcs] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -48,6 +68,30 @@ const Upload = () => {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     console.log(data)
+  }
+
+  const add_image = (img: string) => {
+    const style = {
+      id: Date.now(),
+      name: 'image',
+      type: 'image',
+      left: 10,
+      top: 10,
+      opacity: '1',
+      width: 200,
+      height: 150,
+      rotate,
+      z_index: 2,
+      radius: 1,
+      image: img,
+      setCurrentComponent: (a:ComponentProps) => setCurrentComponent(a),
+      moveElement,
+      resizeElement,
+      rotateElement
+    }
+
+    setCurrentComponent(style)
+    setComponents([...components, style])
   }
 
   return (
@@ -67,6 +111,7 @@ const Upload = () => {
                       if (e.target.files) {
                         const filesArray = Array.from(e.target.files);
                         setSelectedFiles([...selectedFiles, ...filesArray]);
+                        const newImageSrcs: string[] = [];
                         filesArray.forEach(file => {
                           const reader = new FileReader();
                           reader.onload = () => {
@@ -86,11 +131,11 @@ const Upload = () => {
         </form>
       </Form>
       {imageSrcs.map((src, index) => (
-        <div key={index}>
+        <div onClick={()=>add_image(src)} key={index}>
           <Image
             src={src}
             alt={`Uploaded image ${index + 1}`}
-            className='rounded '
+            className='rounded cursor-pointer'
             width={'240'}
             height={"150"}
             style={{

@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import Image from 'next/image';
-import { MdDelete } from "react-icons/md";
+import { RxCross2 } from "react-icons/rx";
 
 import Element from '@/components/editor/element';
 import { Button } from '@/components/ui/button';
-import { Textarea } from "@/components/ui/textarea"
 import { ComponentProps } from '@/types/type';
 
 interface EditEditorProps {
@@ -59,13 +57,12 @@ const EditEditor: React.FC<EditEditorProps> = ({
             <Element id={randValue} info={info} exId="" />
             {
                 current_component.id === info.id && (
-                    <Button
+                    <div
                         onClick={() => removeComponent(info.id)}
-                        variant={"outline"}
-                        className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
                     >
-                        <MdDelete className='w-5 h-5' />
-                    </Button>
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
                 )
             }
         </div>
@@ -91,13 +88,12 @@ const EditEditor: React.FC<EditEditorProps> = ({
             </div>
             {
                 current_component.id === info.id && (
-                    <Button
+                    <div
                         onClick={() => removeComponent(info.id)}
-                        variant={"outline"}
-                        className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
                     >
-                        <MdDelete className='w-5 h-5' />
-                    </Button>
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
                 )
             }
         </div>
@@ -124,13 +120,12 @@ const EditEditor: React.FC<EditEditorProps> = ({
             </div>
             {
                 current_component.id === info.id && (
-                    <Button
+                    <div
                         onClick={() => removeComponent(info.id)}
-                        variant={"outline"}
-                        className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
                     >
-                        <MdDelete className='w-5 h-5' />
-                    </Button>
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
                 )
             }
         </div>
@@ -150,28 +145,67 @@ const EditEditor: React.FC<EditEditorProps> = ({
         >
             <Element id={randValue} info={info} exId="" />
 
-            <h2
+            <textarea
                 style={{ fontSize: info.font + 'px', fontWeight: info.weight }}
-                className='w-full h-full'
+                className='w-full h-full bg-transparent border-none focus:border-2 hover:border-2'
             >
                 {info.title}
-            </h2>
-
+            </textarea>
             {
                 current_component.id === info.id && (
-                    <Button
+                    <div
                         onClick={() => removeComponent(info.id)}
-                        variant={"outline"}
-                        className='x-3 py-2 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-md'
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
                     >
-                        <MdDelete className='w-5 h-5' />
-                    </Button>
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
                 )
             }
         </div>
     }
 
-
+    if (info.name === 'image') {
+        html = <div id={randValue} onClick={() => info.setCurrentComponent(info)} style={{
+            left: info.left + 'px',
+            top: info.top + 'px',
+            zIndex: info.z_index,
+            transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)',
+            opacity: info.opacity,
+        }}
+            className='absolute group hover:border-[2px] hover:border-indigo-500'
+        >
+            <Element id={randValue} info={info} exId={`${randValue}img`} />
+            {
+                info.image && (
+                    <div className='overflow-hidden' id={`${randValue}img`} style={{
+                        width: info.width + 'px',
+                        height: info.height + 'px'
+                    }}>
+                        <Image
+                            src={info.image}
+                            alt={info.image || "image"}
+                            layout='fill'
+                            objectFit='contain'
+                            className={`w-full h-full`}
+                            style={{
+                                borderRadius: `${info.radius}%`
+                            }}
+                        />
+                    </div>
+                )
+            }
+            {
+                current_component.id === info.id && (
+                    <div
+                        onClick={() => removeComponent(info.id)}
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
+                    >
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
+                )
+            }
+        </div>
+    }
 
     return html;
 }

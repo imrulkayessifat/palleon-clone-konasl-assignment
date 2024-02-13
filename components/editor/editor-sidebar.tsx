@@ -18,6 +18,7 @@ import { Slider } from "@/components/ui/slider"
 import { useColorStore } from "@/hooks/color";
 import { useOpacityStore } from "@/hooks/opacity";
 import { useZIndexStore } from "@/hooks/z-index";
+import { useRadiusStore } from "@/hooks/radius";
 import { ComponentProps } from "@/types/type";
 
 const SidebarSchema = z.object({
@@ -26,7 +27,8 @@ const SidebarSchema = z.object({
     z_index: z.string(),
     padding: z.number(),
     font: z.number(),
-    weight: z.number()
+    weight: z.number(),
+    radius: z.number()
 })
 
 interface EditorSidebarProps {
@@ -47,7 +49,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
 
     const { setColor } = useColorStore();
     const { setOpacity } = useOpacityStore();
-    const { setZIndex } = useZIndexStore()
+    const { setZIndex } = useZIndexStore();
+    const { setRadius } = useRadiusStore();
     const [sliderValue, setSliderValue] = useState(1);
     const form = useForm<z.infer<typeof SidebarSchema>>({
         resolver: zodResolver(SidebarSchema),
@@ -58,6 +61,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
             padding: current_component.padding,
             font: current_component.font,
             weight: current_component.weight,
+            radius: current_component.radius
         }
     });
 
@@ -218,6 +222,31 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                                     )}
                                 />
                             </>
+                        )
+                    }
+                    {
+                        current_component.name === 'image' && (
+                            <FormField
+                                control={form.control}
+                                name="radius"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Radius</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                defaultValue={current_component.radius}
+                                                min={1}
+                                                onChange={(e) => {
+                                                    field.onChange(e.target.value);
+                                                    setRadius(parseInt(e.target.value))
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         )
                     }
                 </form>

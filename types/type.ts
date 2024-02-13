@@ -5,7 +5,7 @@ export interface ComponentProps {
     height?             : number;
     width?              : number;
     z_index             : number;
-    color               : string;
+    color?               : string;
     image?              : string;
     opacity?            : string;
     padding?            : number;
@@ -15,6 +15,7 @@ export interface ComponentProps {
     left?               : number;
     top?                : number;
     rotate?             : number;
+    radius?              : number;
     resizeElement?      :(id:string,currentInfo:ComponentProps)=>void;
     rotateElement?      :(id:string,currentInfo:ComponentProps)=>void;
     moveElement?        :(id:string,currentInfo:ComponentProps)=>void;
