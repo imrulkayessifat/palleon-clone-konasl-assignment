@@ -143,47 +143,96 @@ const Editor = () => {
 
     const rotateElement = (id: string, currentInfo: ComponentProps) => {
         // setCurrentComponent(main_obj)
-        setCurrentComponent(currentInfo)
+        // setCurrentComponent(currentInfo)
 
-        const target = document.getElementById(id)
+        // const target = document.getElementById(id)
+
+        // const mouseMove = (event: MouseEvent) => {
+        //     if (!target) return;
+
+        //     const { movementX, movementY } = event;
+        //     const getStyle = window.getComputedStyle(target)
+
+        //     const trans = getStyle.transform
+
+        //     const values = trans.split('(')[1].split(')')[0].split(',')
+
+        //     const angle = Math.round(Math.atan2(parseInt(values[1]), parseInt(values[0])) * (180 / Math.PI))
+
+        //     let deg = angle < 0 ? angle + 360 : angle
+
+        //     if (movementX) {
+        //         deg = deg + movementX
+        //     }
+
+        //     console.log(deg)
+
+        //     target.style.transform = `rotate(${deg}deg)`
+
+        // }
+        // const mouseUp = () => {
+        //     window.removeEventListener('mousemove', mouseMove)
+        //     window.removeEventListener('mouseup', mouseUp)
+
+        //     if (!target) return;
+
+        //     const getStyle = window.getComputedStyle(target)
+        //     const trans = getStyle.transform
+        //     const values = trans.split('(')[1].split(')')[0].split(',')
+        //     const angle = Math.round(Math.atan2(parseInt(values[1]), parseInt(values[0])) * (180 / Math.PI))
+        //     let deg = angle < 0 ? angle + 360 : angle
+        //     setRotate(deg)
+
+        // }
+
+        // window.addEventListener('mousemove', mouseMove)
+        // window.addEventListener('mouseup', mouseUp)
+
+        const target = document.getElementById(id);
+
+        let startAngle = 0;
+
+        const mouseDown = (event: MouseEvent) => {
+            const rect = target?.getBoundingClientRect();
+            if (!rect) return;
+
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const startX = event.clientX;
+            const startY = event.clientY;
+
+            startAngle = Math.atan2(startY - centerY, startX - centerX);
+
+            window.addEventListener('mousemove', mouseMove);
+            window.addEventListener('mouseup', mouseUp);
+        };
 
         const mouseMove = (event: MouseEvent) => {
             if (!target) return;
 
-            const { movementX, movementY } = event;
-            const getStyle = window.getComputedStyle(target)
+            const rect = target.getBoundingClientRect();
+            if (!rect) return;
 
-            const trans = getStyle.transform
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
 
-            const values = trans.split('(')[1].split(')')[0].split(',')
+            const mouseX = event.clientX;
+            const mouseY = event.clientY;
 
-            const angle = Math.round(Math.atan2(parseInt(values[1]), parseInt(values[0])) * (180 / Math.PI))
+            const angle = Math.atan2(mouseY - centerY, mouseX - centerX);
 
-            let deg = angle < 0 ? angle + 360 : angle
+            const rotation = angle - startAngle;
 
-            if (movementX) {
-                deg = deg + movementX
-            }
-            target.style.transform = `rotate(${deg}deg)`
+            target.style.transform = `rotate(${rotation}rad)`;
+        };
 
-        }
         const mouseUp = () => {
-            window.removeEventListener('mousemove', mouseMove)
-            window.removeEventListener('mouseup', mouseUp)
+            window.removeEventListener('mousemove', mouseMove);
+            window.removeEventListener('mouseup', mouseUp);
+        };
 
-            if (!target) return;
-
-            const getStyle = window.getComputedStyle(target)
-            const trans = getStyle.transform
-            const values = trans.split('(')[1].split(')')[0].split(',')
-            const angle = Math.round(Math.atan2(parseInt(values[1]), parseInt(values[0])) * (180 / Math.PI))
-            let deg = angle < 0 ? angle + 360 : angle
-            setRotate(deg)
-
-        }
-
-        window.addEventListener('mousemove', mouseMove)
-        window.addEventListener('mouseup', mouseUp)
+        window.addEventListener('mousedown', mouseDown);
     }
 
     useEffect(() => {

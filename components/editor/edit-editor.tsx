@@ -1,8 +1,8 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { RxCross2 } from "react-icons/rx";
 
 import Element from '@/components/editor/element';
-import { Button } from '@/components/ui/button';
 import { ComponentProps } from '@/types/type';
 
 interface EditEditorProps {
@@ -16,6 +16,8 @@ const EditEditor: React.FC<EditEditorProps> = ({
 }) => {
     const randValue = Math.floor(Math.random() * 100).toString();
     let html: React.ReactNode = null
+
+    const [isInside, setIsInside] = useState(false);
 
     if (info.name === 'main_frame') {
         html = <div onClick={() => info.setCurrentComponent(info)} className='hover:border-[2px] hover:border-indigo-500 shadow-md' style={{
@@ -39,6 +41,17 @@ const EditEditor: React.FC<EditEditorProps> = ({
         </div>
     }
 
+    function isInsideContainer(event: React.MouseEvent<HTMLDivElement, MouseEvent>, containerId: string) {
+        const container = document.getElementById(containerId);
+        if (!container) return false;
+
+        const rect = container.getBoundingClientRect();
+        const offsetX = event.clientX - rect.left;
+        const offsetY = event.clientY - rect.top;
+
+        return offsetX > 15 && offsetX < rect.width - 15 && offsetY > 15 && offsetY < rect.height - 15;
+    }
+
     if (info.name === 'shape' && info.type === 'rect') {
         html = <div id={randValue} onClick={() => info.setCurrentComponent(info)}
             style={{
@@ -51,7 +64,14 @@ const EditEditor: React.FC<EditEditorProps> = ({
                 zIndex: info.z_index,
                 transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
             }}
-            className={`absolute cursor-move group hover:border-[2px] hover:border-indigo-500`}
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''}  group hover:border-[2px] hover:border-indigo-500`}
         >
             <Element id={randValue} info={info} exId="" />
             {
@@ -77,7 +97,14 @@ const EditEditor: React.FC<EditEditorProps> = ({
                 zIndex: info.z_index,
                 transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
             }}
-            className='absolute group cursor-move hover:border-[2px] hover:border-indigo-500'
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''}  group hover:border-[2px] hover:border-indigo-500`}
         >
             <Element id={randValue} info={info} exId={`${randValue}c`} />
             <div id={`${randValue}c`} className='rounded-full' style={{
@@ -108,7 +135,14 @@ const EditEditor: React.FC<EditEditorProps> = ({
             zIndex: info.z_index,
             transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
         }}
-            className='absolute cursor-move group hover:border-[2px] hover:border-indigo-500'
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''}  group hover:border-[2px] hover:border-indigo-500`}
         >
             <Element id={randValue} info={info} exId={`${randValue}t`} />
             <div id={`${randValue}t`} style={{
@@ -143,13 +177,20 @@ const EditEditor: React.FC<EditEditorProps> = ({
             color: info.color,
             opacity: info.opacity,
         }}
-            className='absolute cursor-move group hover:border-[2px] hover:border-indigo-500'
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''}  group hover:border-[2px] hover:border-indigo-500`}
         >
             <Element id={randValue} info={info} exId="" />
 
             <textarea
                 style={{ fontSize: info.font + 'px', fontWeight: info.weight }}
-                className='w-full h-full bg-transparent border-none focus:border-2 hover:border-2'
+                className='w-full resize-none h-full bg-transparent border-none focus:border-2 hover:border-2'
             >
                 {info.title}
             </textarea>
@@ -174,15 +215,26 @@ const EditEditor: React.FC<EditEditorProps> = ({
             transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)',
             opacity: info.opacity,
         }}
-            className='absolute cursor-move group hover:border-[2px] hover:border-indigo-500'
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''} group hover:border-[2px] hover:border-indigo-500`}
         >
             <Element id={randValue} info={info} exId={`${randValue}img`} />
             {
                 info.image && (
-                    <div className='overflow-hidden' id={`${randValue}img`} style={{
-                        width: info.width + 'px',
-                        height: info.height + 'px'
-                    }}>
+                    <div
+                        id={`${randValue}img`}
+                        style={{
+                            width: info.width + 'px',
+                            height: info.height + 'px'
+                        }}
+                        className='overflow-hidden'
+                    >
                         <Image
                             src={info.image}
                             alt={info.image || "image"}
