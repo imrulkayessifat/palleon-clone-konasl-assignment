@@ -87,6 +87,41 @@ const EditEditor: React.FC<EditEditorProps> = ({
         </div>
     }
 
+    if (info.name === 'shape' && info.type === 'square') {
+        html = <div id={randValue} onClick={() => info.setCurrentComponent(info)}
+            style={{
+                width: info.width + 'px',
+                height: info.height + 'px',
+                background: info.color,
+                opacity: info.opacity,
+                left: info.left + 'px',
+                top: info.top + 'px',
+                zIndex: info.z_index,
+                transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
+            }}
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''}  group hover:border-[2px] hover:border-indigo-500`}
+        >
+            <Element id={randValue} info={info} exId="" />
+            {
+                current_component.id === info.id && (
+                    <div
+                        onClick={() => removeComponent(info.id)}
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
+                    >
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
+                )
+            }
+        </div>
+    }
+
     if (info.name === 'shape' && info.type === 'circle') {
         html = <div
             id={randValue}
@@ -128,7 +163,49 @@ const EditEditor: React.FC<EditEditorProps> = ({
         </div>
     }
 
-    if (info.name === 'shape' && info.type === 'trangle') {
+    if (info.name === 'shape' && info.type === 'ellipse') {
+        html = <div
+            id={randValue}
+            onClick={() => info.setCurrentComponent(info)}
+            style={{
+                left: info.left + 'px',
+                top: info.top + 'px',
+                zIndex: info.z_index,
+                transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
+            }}
+            onMouseDown={(event) => {
+                const inside = isInsideContainer(event, randValue);
+                setIsInside(inside);
+                if (info.moveElement && inside) {
+                    info.moveElement(randValue, info);
+                }
+            }}
+            className={`absolute ${isInside ? 'cursor-move' : ''}  group hover:border-[2px] hover:border-indigo-500`}
+        >
+            <Element id={randValue} info={info} exId={`${randValue}c`} />
+            <div id={`${randValue}c`} className='rounded-full' style={{
+                width: info.width + 'px',
+                height: info.width + 'px',
+                background: info.color,
+                borderRadius:info.borderRadius,
+                opacity: info.opacity,
+            }}>
+
+            </div>
+            {
+                current_component.id === info.id && (
+                    <div
+                        onClick={() => removeComponent(info.id)}
+                        className='x-3 py-2 absolute top-[100%] left-[46%] -bottom-[20px] hidden group-hover:block cursor-pointer rounded-md'
+                    >
+                        <RxCross2 className='w-7 h-7 text-red-500' />
+                    </div>
+                )
+            }
+        </div>
+    }
+
+    if (info.name === 'shape' && info.type === 'triangle') {
         html = <div id={randValue} onClick={() => info.setCurrentComponent(info)} style={{
             left: info.left + 'px',
             top: info.top + 'px',

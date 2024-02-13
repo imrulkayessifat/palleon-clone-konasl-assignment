@@ -13,6 +13,7 @@ export interface ComponentProps {
     title?              : string;
     weight?             : number;
     left?               : number;
+    borderRadius?       : string;
     top?                : number;
     rotate?             : number;
     radius?              : number;
