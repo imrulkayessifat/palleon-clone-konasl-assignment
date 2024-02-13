@@ -137,9 +137,6 @@ const Navbar = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button variant={"outline"}>
-            Save
-          </Button>
           <Dialog>
             <DialogTrigger asChild>
               <Button className="flex gap-3" variant={"outline"}>
