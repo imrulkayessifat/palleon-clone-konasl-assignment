@@ -33,7 +33,7 @@ const Text: React.FC<TextProps> = ({
       type,
       left: 10,
       top: 10,
-      opacity: 1,
+      opacity: '1',
       rotate,
       z_index: 10,
       padding: 6,
