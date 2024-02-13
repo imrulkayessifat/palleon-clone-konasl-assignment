@@ -27,7 +27,7 @@ const Shapes: React.FC<ShapesProps> = ({
     'rect': { width: 120, height: 90 },
     'square': { width: 120, height: 120 },
     'circle': { width: 90, height: 90 },
-    'ellipse': { width: 90, height: 45,borderRadius:'50%' },
+    'ellipse': { width: 200, height: 100,borderRadius:'50%' },
     'triangle': { width: 50, height: 50 },
     'default': { width: 200, height: 150 }
   };
@@ -71,7 +71,7 @@ const Shapes: React.FC<ShapesProps> = ({
             height: 100 + 'px',
             borderRadius: '50%'
           }}
-          className="bg-blue-500"
+          className="bg-blue-500 cursor-pointer"
         >
 
         </div>

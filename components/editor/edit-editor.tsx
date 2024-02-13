@@ -164,6 +164,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
     }
 
     if (info.name === 'shape' && info.type === 'ellipse') {
+        console.log(info.width,info.height,info.borderRadius)
         html = <div
             id={randValue}
             onClick={() => info.setCurrentComponent(info)}
@@ -185,9 +186,9 @@ const EditEditor: React.FC<EditEditorProps> = ({
             <Element id={randValue} info={info} exId={`${randValue}c`} />
             <div id={`${randValue}c`} className='rounded-full' style={{
                 width: info.width + 'px',
-                height: info.width + 'px',
+                height: info.height + 'px',
                 background: info.color,
-                borderRadius:info.borderRadius,
+                borderRadius:'50%',
                 opacity: info.opacity,
             }}>
 

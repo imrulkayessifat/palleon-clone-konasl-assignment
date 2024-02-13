@@ -71,7 +71,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
 
     useEffect(() => {
         setSliderValue(parseFloat(opacityValue))
-    }, [current_component.opacity])
+    }, [current_component.opacity,opacityValue])
 
     return (
         <div className="flex flex-col gap-3 ">
