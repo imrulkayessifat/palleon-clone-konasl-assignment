@@ -142,53 +142,49 @@ const Editor = () => {
     }
 
     const rotateElement = (id: string, currentInfo: ComponentProps) => {
+        setCurrentComponent(main_obj)
+        setCurrentComponent(currentInfo)
 
-        const target = document.getElementById(id);
+        const target = document.getElementById(id)
 
-        let startAngle = 0;
+        if(!target) return;
 
-        const mouseDown = (event: MouseEvent) => {
-            const rect = target?.getBoundingClientRect();
-            if (!rect) return;
+        const mouseMove = (event:MouseEvent) => {
 
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            const getStyle = window.getComputedStyle(target)
 
-            const startX = event.clientX;
-            const startY = event.clientY;
+            const {movementX, movementY} = event;
 
-            startAngle = Math.atan2(startY - centerY, startX - centerX);
+            const trans = getStyle.transform
 
-            window.addEventListener('mousemove', mouseMove);
-            window.addEventListener('mouseup', mouseUp);
-        };
+            const values = trans.split('(')[1].split(')')[0].split(',')
 
-        const mouseMove = (event: MouseEvent) => {
-            if (!target) return;
+            const angle = Math.round(Math.atan2(parseFloat(values[1]), parseFloat(values[0])) * (180 / Math.PI))
 
-            const rect = target.getBoundingClientRect();
-            if (!rect) return;
+            let deg = angle < 0 ? angle + 360 : angle
 
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            if (movementX) {
+                deg = deg + movementX
+            }
+            target.style.transform = `rotate(${deg}deg)`
 
-            const mouseX = event.clientX;
-            const mouseY = event.clientY;
-
-            const angle = Math.atan2(mouseY - centerY, mouseX - centerX);
-
-            const rotation = angle - startAngle;
-
-            target.style.transform = `rotate(${rotation}rad)`;
-        };
-
+        }
         const mouseUp = () => {
-            window.removeEventListener('mousemove', mouseMove);
-            window.removeEventListener('mouseup', mouseUp);
-        };
+            window.removeEventListener('mousemove', mouseMove)
+            window.removeEventListener('mouseup', mouseUp)
 
-        window.addEventListener('mousedown', mouseDown);
-    }
+            const getStyle = window.getComputedStyle(target)
+            const trans = getStyle.transform
+            const values = trans.split('(')[1].split(')')[0].split(',')
+            const angle = Math.round(Math.atan2(parseFloat(values[1]), parseFloat(values[0])) * (180 / Math.PI))
+            let deg = angle < 0 ? angle + 360 : angle
+            setRotate(deg)
+        }
+
+        window.addEventListener('mousemove', mouseMove)
+        window.addEventListener('mouseup', mouseUp)
+    }   
+
 
     useEffect(() => {
         if (current_component) {
@@ -235,8 +231,8 @@ const Editor = () => {
             setOpacity('')
             setZIndex('')
         }
-    }, [color, image, left, top, width, height, opacity, zindex, padding, font, weight, radius])
-
+    }, [color, image, left, top, width, height, rotate, opacity, zindex, padding, font, weight, radius])
+    console.log(components)
     return (
         <div className='mt-24'>
             <div className='flex mx-auto px-8'>
