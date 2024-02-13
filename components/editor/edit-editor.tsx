@@ -51,8 +51,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
                 zIndex: info.z_index,
                 transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
             }}
-
-            className={`absolute group hover:border-[2px] hover:border-indigo-500`}
+            className={`absolute cursor-move group hover:border-[2px] hover:border-indigo-500`}
         >
             <Element id={randValue} info={info} exId="" />
             {
@@ -69,13 +68,16 @@ const EditEditor: React.FC<EditEditorProps> = ({
     }
 
     if (info.name === 'shape' && info.type === 'circle') {
-        html = <div id={randValue} onClick={() => info.setCurrentComponent(info)} style={{
-            left: info.left + 'px',
-            top: info.top + 'px',
-            zIndex: info.z_index,
-            transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
-        }}
-            className='absolute group hover:border-[2px] hover:border-indigo-500'
+        html = <div
+            id={randValue}
+            onClick={() => info.setCurrentComponent(info)}
+            style={{
+                left: info.left + 'px',
+                top: info.top + 'px',
+                zIndex: info.z_index,
+                transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
+            }}
+            className='absolute group cursor-move hover:border-[2px] hover:border-indigo-500'
         >
             <Element id={randValue} info={info} exId={`${randValue}c`} />
             <div id={`${randValue}c`} className='rounded-full' style={{
@@ -106,7 +108,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
             zIndex: info.z_index,
             transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)'
         }}
-            className='absolute group hover:border-[2px] hover:border-indigo-500'
+            className='absolute cursor-move group hover:border-[2px] hover:border-indigo-500'
         >
             <Element id={randValue} info={info} exId={`${randValue}t`} />
             <div id={`${randValue}t`} style={{
@@ -141,7 +143,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
             color: info.color,
             opacity: info.opacity,
         }}
-            className='absolute group hover:border-[2px] hover:border-indigo-500'
+            className='absolute cursor-move group hover:border-[2px] hover:border-indigo-500'
         >
             <Element id={randValue} info={info} exId="" />
 
@@ -172,7 +174,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
             transform: info.rotate ? `rotate(${info.rotate}deg)` : 'rotate(0deg)',
             opacity: info.opacity,
         }}
-            className='absolute group hover:border-[2px] hover:border-indigo-500'
+            className='absolute cursor-move group hover:border-[2px] hover:border-indigo-500'
         >
             <Element id={randValue} info={info} exId={`${randValue}img`} />
             {

@@ -142,7 +142,7 @@ const Editor = () => {
     }
 
     const rotateElement = (id: string, currentInfo: ComponentProps) => {
-        setCurrentComponent(main_obj)
+        // setCurrentComponent(main_obj)
         setCurrentComponent(currentInfo)
 
         const target = document.getElementById(id)
