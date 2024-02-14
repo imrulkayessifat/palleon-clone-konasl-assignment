@@ -4,7 +4,8 @@ import { RxCross2 } from "react-icons/rx";
 
 import Element from '@/components/editor/element';
 import { useFontFamilyStore } from '@/hooks/font-family';
-import { ComponentProps } from '@/types/type';
+import { useDraw } from '@/hooks/useDraw';
+import { ComponentProps, Draw, Point } from '@/types/type';
 
 interface EditEditorProps {
     info: ComponentProps;
@@ -20,6 +21,27 @@ const EditEditor: React.FC<EditEditorProps> = ({
 
     const [isInside, setIsInside] = useState(false);
     const { fontFamily } = useFontFamilyStore();
+
+    const { canvasRef, onMouseDown, clear } = useDraw(drawLine)
+
+    function drawLine({ prevPoint, currentPoint, ctx }: Draw) {
+        const { x: currX, y: currY } = currentPoint
+        const lineColor = info.color
+        const lineWidth = info.width
+
+        let startPoint = prevPoint ?? currentPoint
+        ctx.beginPath()
+        ctx.lineWidth = lineWidth ? lineWidth : 1
+        ctx.strokeStyle = lineColor ? lineColor : '#000000'
+        ctx.moveTo(startPoint.x, startPoint.y)
+        ctx.lineTo(currX, currY)
+        ctx.stroke()
+
+        ctx.fillStyle = lineColor ? lineColor : '#000000'
+        ctx.beginPath()
+        ctx.arc(startPoint.x, startPoint.y, 2, 0, 2 * Math.PI)
+        ctx.fill()
+    }
 
     if (info.name === 'main_frame') {
         html = <div onClick={() => info.setCurrentComponent(info)} className='hover:border-[2px] hover:border-indigo-500 shadow-md' style={{
@@ -338,6 +360,23 @@ const EditEditor: React.FC<EditEditorProps> = ({
                 )
             }
         </div>
+    }
+
+    if (info.name === 'draw') {
+        html = <canvas
+            id={randValue}
+            onClick={() => info.setCurrentComponent(info)}
+            style={{
+                right: 0 + 'px',
+                top: 0 + 'px',
+                zIndex: info.z_index
+            }}
+            ref={canvasRef}
+            onMouseDown={onMouseDown}
+            className={`absolute  hover:border-[2px] hover:border-red-500`}
+        >
+            <Element id={randValue} info={info} exId={`${randValue}draw`} />
+        </canvas>
     }
 
     return html;

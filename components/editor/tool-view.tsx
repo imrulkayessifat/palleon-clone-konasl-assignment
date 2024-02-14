@@ -4,6 +4,7 @@ import { ComponentProps } from '@/types/type'
 
 import Text from '@/components/editor/tools/text'
 import Upload from '@/components/editor/tools/upload'
+import Draw from '@/components/editor/tools/draw'
 import Shapes from '@/components/editor/tools/shapes'
 import Banner from '@/components/editor/tools/banner'
 import { useToolStore } from '@/hooks/tools'
@@ -12,7 +13,8 @@ const views: { [key: string]: React.ElementType } = {
     text: Text,
     upload: Upload,
     shapes: Shapes,
-    banner: Banner
+    banner: Banner,
+    draw:Draw
 }
 
 interface ToolViewProps {

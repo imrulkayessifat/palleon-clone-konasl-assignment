@@ -1,7 +1,7 @@
 import { CiText } from "react-icons/ci";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { FaShapes } from "react-icons/fa";
-import { MdWallpaper } from "react-icons/md";
+import { MdWallpaper,MdDraw } from "react-icons/md";
 import { IconType } from "react-icons";
 
 interface ToolsProps {
@@ -25,5 +25,9 @@ export const tools: ToolsProps[] = [
     {
         component: MdWallpaper,
         type: 'banner'
+    },
+    {
+        component: MdDraw,
+        type: 'draw'
     }
 ]

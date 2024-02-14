@@ -185,7 +185,6 @@ const Editor = () => {
         window.addEventListener('mouseup', mouseUp)
     }   
 
-
     useEffect(() => {
         if (current_component) {
             const index = components.findIndex(c => c.id === current_component.id)
@@ -232,7 +231,7 @@ const Editor = () => {
             setZIndex('')
         }
     }, [color, image, left, top, width, height, rotate, opacity, zindex, padding, font, weight, radius])
-    console.log(components)
+
     return (
         <div className='mt-24'>
             <div className='flex mx-auto px-8'>
