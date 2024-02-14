@@ -13,12 +13,20 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { useColorStore } from "@/hooks/color";
 import { useOpacityStore } from "@/hooks/opacity";
 import { useZIndexStore } from "@/hooks/z-index";
 import { useRadiusStore } from "@/hooks/radius";
+import { useFontFamilyStore } from "@/hooks/font-family";
 import { ComponentProps } from "@/types/type";
 
 const SidebarSchema = z.object({
@@ -28,7 +36,8 @@ const SidebarSchema = z.object({
     padding: z.number(),
     font: z.number(),
     weight: z.number(),
-    radius: z.number()
+    radius: z.number(),
+    fontFamily: z.string()
 })
 
 interface EditorSidebarProps {
@@ -51,6 +60,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
     const { setOpacity } = useOpacityStore();
     const { setZIndex } = useZIndexStore();
     const { setRadius } = useRadiusStore();
+    const { setFontFamily } = useFontFamilyStore();
     const [sliderValue, setSliderValue] = useState(1);
     const form = useForm<z.infer<typeof SidebarSchema>>({
         resolver: zodResolver(SidebarSchema),
@@ -61,7 +71,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
             padding: current_component.padding,
             font: current_component.font,
             weight: current_component.weight,
-            radius: current_component.radius
+            radius: current_component.radius,
+            fontFamily: 'font-sans'
         }
     });
 
@@ -71,7 +82,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
 
     useEffect(() => {
         setSliderValue(parseFloat(opacityValue))
-    }, [current_component.opacity,opacityValue])
+    }, [current_component.opacity, opacityValue])
 
     return (
         <div className="flex flex-col gap-3 ">
@@ -158,6 +169,34 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({
                     {
                         current_component.name === 'text' && (
                             <>
+                                <FormField
+                                    control={form.control}
+                                    name="fontFamily"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Font-Family</FormLabel>
+                                            <Select
+                                                onValueChange={(value) => {
+                                                    setFontFamily(value)
+                                                    field.onChange
+                                                }}
+                                                defaultValue={field.value}
+                                            >
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select a font-family that applied for text" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="font-sans">font-sans</SelectItem>
+                                                    <SelectItem value="font-serif">font-serif</SelectItem>
+                                                    <SelectItem value="font-mono">font-mono</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                                 <FormField
                                     control={form.control}
                                     name="padding"

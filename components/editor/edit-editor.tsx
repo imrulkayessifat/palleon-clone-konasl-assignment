@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { RxCross2 } from "react-icons/rx";
 
 import Element from '@/components/editor/element';
+import { useFontFamilyStore } from '@/hooks/font-family';
 import { ComponentProps } from '@/types/type';
 
 interface EditEditorProps {
@@ -18,6 +19,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
     let html: React.ReactNode = null
 
     const [isInside, setIsInside] = useState(false);
+    const { fontFamily } = useFontFamilyStore();
 
     if (info.name === 'main_frame') {
         html = <div onClick={() => info.setCurrentComponent(info)} className='hover:border-[2px] hover:border-indigo-500 shadow-md' style={{
@@ -164,7 +166,6 @@ const EditEditor: React.FC<EditEditorProps> = ({
     }
 
     if (info.name === 'shape' && info.type === 'ellipse') {
-        console.log(info.width,info.height,info.borderRadius)
         html = <div
             id={randValue}
             onClick={() => info.setCurrentComponent(info)}
@@ -188,7 +189,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
                 width: info.width + 'px',
                 height: info.height + 'px',
                 background: info.color,
-                borderRadius:'50%',
+                borderRadius: '50%',
                 opacity: info.opacity,
             }}>
 
@@ -268,7 +269,7 @@ const EditEditor: React.FC<EditEditorProps> = ({
 
             <textarea
                 style={{ fontSize: info.font + 'px', fontWeight: info.weight }}
-                className='w-full resize-none h-full bg-transparent border-none focus:border-2 hover:border-2'
+                className={`w-full ${fontFamily} resize-none h-full bg-transparent border-none focus:border-2 hover:border-2`}
             >
                 {info.title}
             </textarea>
